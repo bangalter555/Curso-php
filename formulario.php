@@ -38,7 +38,11 @@
 <body>
 	<form action="formulario.php" method="POST">
     <?php
-    // 1) Validamos que exista un metodo post con ingreso de datos.
+		$nombre = "";
+		$password = "";
+		$email = "";
+		$lenguajes = array();
+    // 1) Validamos que exista una variable 'nombre en POST'.
     // La funcion 'isset() me permite comprobar si existe una variable o un valor'
       if (isset($_POST["nombre"])) {
 
@@ -46,6 +50,13 @@
        $nombre = $_POST["nombre"];
        $password = $_POST["password"];
        $email = $_POST["email"];
+
+			 	//validamos los checkbox
+			if (isset($_POST["lenguajes"])) {
+				$lenguajes = $_POST["lenguajes"];
+			} else {
+				$lenguajes = "";
+			}
 
        //Espacio para los mensajes de error
        $campos = array();
@@ -63,6 +74,11 @@
       if ($email == "" || strpos($email, "@") === false) {
         array_push($campos, "Ingresa un correo válido");
       }
+// 1.e) Validamos los checkbox
+if ($lenguajes == "" || count($lenguajes) <2) {
+	array_push($campos, "Selecciona al menos dos lenguajes de programacion");
+}
+		
 
       if (count($campos) > 0) {
         echo "<div class='error'>";
@@ -81,18 +97,29 @@
 	
 		<p>
 		Nombre:<br/>
-		<input type="text" name="nombre">
+		<input type="text" name="nombre" value="<?php echo $nombre; ?>">
 		</p>
 
 		<p>
 		Password:<br/>
-		<input type="password" name="password">
+		<input type="password" name="password" value="<?php echo $password; ?>">
 		</p>
 
 		<p>
 		correo electrónico:<br/>
-		<input type="text" name="email">
+		<input type="text" name="email" value="<?php echo $email; ?>">
 		</p>
+		<p>
+			Lenguajes de programación <br>	
+			<!-- Validamos que las elecciones queden permanentes. Como los valores estan almacenados en una variable $lenguajes que es un array, utilizamos un metodo 'in_array' que comprueba si u elemento existe en un array. Es el equivalente a array.includes() de JS -->
+			<input type="checkbox" name="lenguajes[]" value="php" <?php if(in_array("php",$lenguajes)) echo "checked" ?>> PHP <br>
+			<input type="checkbox" name="lenguajes[]" value="js" <?php if(in_array("js",$lenguajes)) echo "checed"?>> Javascript <br>
+			<input type="checkbox" name="lenguajes[]" value="java"<?php if(in_array("java",$lenguajes)) echo "checked" ?> >> Java <br>
+			<input type="checkbox" name="lenguajes[]" value="swift" <?php if(in_array("swift",$lenguajes)) echo "checked" ?> > Swift <br>
+			<input type="checkbox" name="lenguajes[]" value="py" <?php if(in_array("py",$lenguajes)) echo "checked" ?> > Python <br>
+		</p>
+
+
 
 		<p><input type="submit" value="enviar datos"></p> 
 	</form>
